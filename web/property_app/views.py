@@ -6,22 +6,22 @@ from .models import Location, Property
 
 
 def home(request):
-    """Homepage with a search form (search box for a location name)."""
-    locations = Location.objects.order_by("name")
+    """Homepage with a search form (search box for a location/country name)."""
+    locations = Location.objects.order_by("country")
     return render(request, "property_app/home.html", {"locations": locations})
 
 
 def property_search(request):
     """
     Location-based property search + listing with pagination.
-    Matches partially and case-insensitively against Location.name.
+    Matches partially and case-insensitively against Location.country.
     """
     query = request.GET.get("location", "").strip()
 
     properties = Property.objects.select_related("location").prefetch_related("images")
 
     if query:
-        properties = properties.filter(location__name__icontains=query)
+        properties = properties.filter(location__country__icontains=query)
 
     properties = properties.order_by("-created_at")
 
@@ -42,8 +42,8 @@ def property_search(request):
 
 def property_detail(request, pk):
     """
-    Property detail page with images, amenities, and distance from the
-    location's center point (e.g. distance from the city center).
+    Property detail page with images, and distance from the location's
+    center point (e.g. distance from the city center).
     """
     property_qs = Property.objects.select_related("location").prefetch_related("images")
 
@@ -64,7 +64,6 @@ def property_detail(request, pk):
         "property_app/property_detail.html",
         {
             "property": obj,
-            "amenities": obj.amenities_list(),
             "distance_km": distance_km,
         },
     )

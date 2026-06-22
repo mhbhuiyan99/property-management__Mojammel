@@ -11,11 +11,7 @@ class PropertyImageInline(admin.TabularInline):
     readonly_fields = ("preview",)
 
     def preview(self, obj):
-        src = None
-        if obj.image:
-            src = obj.image.url
-        elif obj.url:
-            src = obj.url
+        src = obj.image.url if obj.image else obj.url
         if not src:
             return "(no image yet)"
         return format_html(
@@ -25,28 +21,19 @@ class PropertyImageInline(admin.TabularInline):
 
     preview.short_description = "Preview"
 
-
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ("name", "code", "center", "created_at")
+    list_display = ("country", "code", "center", "created_at")
     list_filter = ("code",)
-    search_fields = ("name", "code")
+    search_fields = ("country", "code")
     readonly_fields = ("created_at", "updated_at")
 
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display = (
-        "name",
-        "location",
-        "property_type",
-        "price",
-        "bedrooms",
-        "bathrooms",
-        "primary_image_preview",
-    )
-    list_filter = ("location", "property_type", "bedrooms", "bathrooms")
-    search_fields = ("name", "description", "location__name")
+    list_display = ("name", "location", "primary_image_preview", "created_at")
+    list_filter = ("location",)
+    search_fields = ("name", "description", "location__country")
     inlines = [PropertyImageInline]
     readonly_fields = ("created_at", "updated_at")
 
@@ -63,4 +50,3 @@ class PropertyAdmin(admin.ModelAdmin):
         )
 
     primary_image_preview.short_description = "Image"
-

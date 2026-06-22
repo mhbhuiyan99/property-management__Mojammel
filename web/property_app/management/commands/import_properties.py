@@ -23,10 +23,9 @@ class Command(BaseCommand):
 
         df = pd.read_csv(csv_path)
         required_cols = {
-            "location_name", "country_code", "location_lat", "location_lng",
-            "property_name", "description", "property_type", "price",
-            "bedrooms", "bathrooms", "amenities", "property_lat",
-            "property_lng", "image_urls",
+            "country", "country_code", "location_lat", "location_lng",
+            "property_name", "description", "property_lat", "property_lng",
+            "image_urls",
         }
         missing = required_cols - set(df.columns)
         if missing:
@@ -39,7 +38,7 @@ class Command(BaseCommand):
 
         for _, row in df.iterrows():
             location, loc_created = Location.objects.get_or_create(
-                name=str(row["location_name"]).strip(),
+                country=str(row["country"]).strip(),
                 defaults={
                     "code": str(row.get("country_code", "")).strip(),
                     "center": Point(float(row["location_lng"]), float(row["location_lat"])),
@@ -53,11 +52,6 @@ class Command(BaseCommand):
                 location=location,
                 defaults={
                     "description": str(row.get("description", "") or ""),
-                    "property_type": str(row.get("property_type", "") or ""),
-                    "price": row.get("price") or None,
-                    "bedrooms": int(row.get("bedrooms", 0) or 0),
-                    "bathrooms": int(row.get("bathrooms", 0) or 0),
-                    "amenities": str(row.get("amenities", "") or ""),
                     "center": (
                         Point(float(row["property_lng"]), float(row["property_lat"]))
                         if pd.notna(row.get("property_lng")) and pd.notna(row.get("property_lat"))
@@ -79,4 +73,3 @@ class Command(BaseCommand):
             f"Properties created: {created_properties}, "
             f"Images created: {created_images}."
         ))
-
