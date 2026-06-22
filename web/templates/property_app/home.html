@@ -1,0 +1,51 @@
+{% extends "property_app/base.html" %}
+
+{% block title %}StayFinder &mdash; Find your next vacation rental{% endblock %}
+
+{% block content %}
+<section class="bg-rose-600">
+    <div class="max-w-6xl mx-auto px-4 py-20 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">
+            Find your next vacation rental
+        </h1>
+        <p class="text-rose-100 mb-8 text-lg">
+            Search vacation homes by city, region, or country.
+        </p>
+
+        <form action="{% url 'property_app:property-search' %}" method="get"
+              class="bg-white rounded-xl shadow-lg p-3 flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+            <input
+                type="text"
+                name="location"
+                placeholder="Where are you going? e.g. Destin, Florida, USA"
+                list="location-options"
+                class="flex-1 px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-gray-800"
+            >
+            <datalist id="location-options">
+                {% for loc in locations %}
+                    <option value="{{ loc.name }}"></option>
+                {% endfor %}
+            </datalist>
+            <button type="submit"
+                    class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+                Search
+            </button>
+        </form>
+    </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 py-12">
+    <h2 class="text-xl font-bold mb-4">Popular locations</h2>
+    <div class="flex flex-wrap gap-3">
+        {% for loc in locations %}
+            <a href="{% url 'property_app:property-search' %}?location={{ loc.name|urlencode }}"
+               class="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm text-gray-700 hover:border-rose-500 hover:text-rose-600 transition">
+                {{ loc.name }}
+            </a>
+        {% empty %}
+            <p class="text-gray-500">No locations yet &mdash; run the import_properties command.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
