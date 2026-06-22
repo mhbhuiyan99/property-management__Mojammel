@@ -23,7 +23,7 @@
             >
             <datalist id="location-options">
                 {% for loc in locations %}
-                    <option value="{{ loc.name }}"></option>
+                    <option value="{{ loc.country }}"></option>
                 {% endfor %}
             </datalist>
             <button type="submit"
@@ -38,9 +38,9 @@
     <h2 class="text-xl font-bold mb-4">Popular locations</h2>
     <div class="flex flex-wrap gap-3">
         {% for loc in locations %}
-            <a href="{% url 'property_app:property-search' %}?location={{ loc.name|urlencode }}"
+            <a href="{% url 'property_app:property-search' %}?location={{ loc.country|urlencode }}"
                class="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm text-gray-700 hover:border-rose-500 hover:text-rose-600 transition">
-                {{ loc.name }}
+                {{ loc.country }}
             </a>
         {% empty %}
             <p class="text-gray-500">No locations yet &mdash; run the import_properties command.</p>

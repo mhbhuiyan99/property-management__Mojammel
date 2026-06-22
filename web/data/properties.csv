@@ -1,7 +1,6 @@
-country,country_code,location_lat,location_lng,property_name,description,property_lat,property_lng,image_urls
-Destin Florida USA,US,30.3935,-86.4958,King's Castle Luxury Beach Escape,Huge private pool and spa with 6-seater golf cart,30.3958,-86.4920,"https://images.unsplash.com/photo-1505843513577-22bb7d21e455,https://images.unsplash.com/photo-1502672260266-1c1ef2d93688"
-Cox's Bazar Bangladesh,BD,21.4272,92.0058,Sea Pearl Beach Villa,Beachfront villa with panoramic sea view,21.4310,92.0100,"https://images.unsplash.com/photo-1499793983690-e29da59ef1c2"
-Bali Indonesia,ID,-8.3405,115.0920,Ubud Jungle Retreat,Private jungle villa with infinity pool,-8.5069,115.2625,"https://images.unsplash.com/photo-1518684079-3c830dcef090,https://images.unsplash.com/photo-1571896349842-33c89424de2d"
-Phuket Thailand,TH,7.8804,98.3923,Patong Beachfront Condo,Modern condo steps from the beach,7.8965,98.2966,"https://images.unsplash.com/photo-1582719478250-c89cae4dc85b"
-Cancun Mexico,MX,21.1619,-86.8515,Riviera Maya Oceanfront Suite,All-inclusive resort suite with ocean view,21.1430,-86.7905,"https://images.unsplash.com/photo-1505881502353-a1986add3762"
-EOF
+country,country_code,location_lat,location_lng,property_name,description,bedrooms,bathrooms,amenities,property_lat,property_lng,image_urls
+Destin Florida USA,US,30.3935,-86.4958,King's Castle Luxury Beach Escape,Huge private pool and spa with 6-seater golf cart,6,4,"Pool,Spa,WiFi,Golf Cart,Beach Access",30.3958,-86.4920,"https://images.unsplash.com/photo-1505843513577-22bb7d21e455,https://images.unsplash.com/photo-1502672260266-1c1ef2d93688"
+Cox's Bazar Bangladesh,BD,21.4272,92.0058,Sea Pearl Beach Villa,Beachfront villa with panoramic sea view,3,2,"WiFi,Beach View,AC,Parking",21.4310,92.0100,"https://images.unsplash.com/photo-1499793983690-e29da59ef1c2"
+Bali Indonesia,ID,-8.3405,115.0920,Ubud Jungle Retreat,Private jungle villa with infinity pool,2,2,"Pool,Jungle View,Breakfast,WiFi",-8.5069,115.2625,"https://images.unsplash.com/photo-1518684079-3c830dcef090,https://images.unsplash.com/photo-1571896349842-33c89424de2d"
+Phuket Thailand,TH,7.8804,98.3923,Patong Beachfront Condo,Modern condo steps from the beach,1,1,"WiFi,AC,Pool Access,Gym",7.8965,98.2966,"https://images.unsplash.com/photo-1582719478250-c89cae4dc85b"
+Cancun Mexico,MX,21.1619,-86.8515,Riviera Maya Oceanfront Suite,All-inclusive resort suite with ocean view,2,2,"Pool,Ocean View,All Inclusive,WiFi",21.1430,-86.7905,"https://images.unsplash.com/photo-1505881502353-a1986add3762"

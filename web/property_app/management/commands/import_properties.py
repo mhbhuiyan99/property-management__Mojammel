@@ -24,8 +24,8 @@ class Command(BaseCommand):
         df = pd.read_csv(csv_path)
         required_cols = {
             "country", "country_code", "location_lat", "location_lng",
-            "property_name", "description", "property_lat", "property_lng",
-            "image_urls",
+            "property_name", "description", "bedrooms", "bathrooms",
+            "amenities", "property_lat", "property_lng", "image_urls",
         }
         missing = required_cols - set(df.columns)
         if missing:
@@ -52,6 +52,9 @@ class Command(BaseCommand):
                 location=location,
                 defaults={
                     "description": str(row.get("description", "") or ""),
+                    "bedrooms": int(row.get("bedrooms", 0) or 0),
+                    "bathrooms": int(row.get("bathrooms", 0) or 0),
+                    "amenities": str(row.get("amenities", "") or ""),
                     "center": (
                         Point(float(row["property_lng"]), float(row["property_lat"]))
                         if pd.notna(row.get("property_lng")) and pd.notna(row.get("property_lat"))

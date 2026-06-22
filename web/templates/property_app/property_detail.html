@@ -1,0 +1,66 @@
+{% extends "property_app/base.html" %}
+
+{% block title %}{{ property.name }} &mdash; StayFinder{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+
+    <a href="{% url 'property_app:property-search' %}?location={{ property.location.country|urlencode }}"
+       class="text-sm text-gray-500 hover:text-rose-600">&larr; Back to {{ property.location.country }}</a>
+
+    <h1 class="text-3xl font-bold mt-3">{{ property.name }}</h1>
+    <p class="text-gray-500 mb-6">{{ property.location.country }}</p>
+
+    {% with images=property.images.all %}
+    {% if images %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            {% for img in images %}
+                <div class="rounded-xl overflow-hidden bg-gray-200 h-64 {% if forloop.first %}sm:col-span-2 sm:h-96{% endif %}">
+                    <img src="{% if img.image %}{{ img.image.url }}{% else %}{{ img.url }}{% endif %}"
+                         alt="{{ img.caption|default:property.name }}"
+                         class="w-full h-full object-cover">
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="rounded-xl bg-gray-200 h-64 flex items-center justify-center text-gray-400 mb-8">No images yet</div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+            <div class="flex gap-6 text-gray-700 mb-6 border-b pb-6">
+                <div><span class="font-bold">{{ property.bedrooms }}</span> bedrooms</div>
+                <div><span class="font-bold">{{ property.bathrooms }}</span> bathrooms</div>
+            </div>
+
+            <h2 class="text-xl font-bold mb-2">About this place</h2>
+            <p class="text-gray-700 mb-6 whitespace-pre-line">{{ property.description|default:"No description provided." }}</p>
+
+            {% if amenities %}
+            <h2 class="text-xl font-bold mb-3">Amenities</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
+                {% for amenity in amenities %}
+                    <div class="flex items-center gap-2 text-gray-700 text-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>{{ amenity }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-5 self-start">
+            <h3 class="font-semibold mb-2">Location</h3>
+            <p class="text-gray-600 text-sm mb-2">{{ property.location.country }}</p>
+
+            {% if distance_km is not None %}
+                <p class="text-gray-600 text-sm">
+                    <span class="font-semibold">{{ distance_km }} km</span> from {{ property.location.country }} city center
+                </p>
+            {% else %}
+                <p class="text-gray-400 text-sm">Distance unavailable (missing coordinates).</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -31,8 +31,8 @@ class LocationAdmin(admin.ModelAdmin):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display = ("name", "location", "primary_image_preview", "created_at")
-    list_filter = ("location",)
+    list_display = ("name", "location", "bedrooms", "bathrooms", "primary_image_preview", "created_at")
+    list_filter = ("location", "bedrooms", "bathrooms")
     search_fields = ("name", "description", "location__country")
     inlines = [PropertyImageInline]
     readonly_fields = ("created_at", "updated_at")

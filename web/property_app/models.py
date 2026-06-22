@@ -35,6 +35,10 @@ class Property(models.Model):
     description = models.TextField(blank=True)
     center = models.PointField(geography=True, srid=4326, null=True, blank=True)
 
+    bedrooms = models.PositiveSmallIntegerField(default=0)
+    bathrooms = models.PositiveSmallIntegerField(default=0)
+    amenities = models.TextField(blank=True, help_text="Comma-separated amenities")
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -44,6 +48,8 @@ class Property(models.Model):
     def __str__(self):
         return self.name
 
+    def amenities_list(self):
+        return [a.strip() for a in self.amenities.split(",") if a.strip()]
 
 class PropertyImage(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="images")

@@ -64,6 +64,7 @@ def property_detail(request, pk):
         "property_app/property_detail.html",
         {
             "property": obj,
+            "amenities": obj.amenities_list(),
             "distance_km": distance_km,
         },
     )
