@@ -4,6 +4,7 @@ from django.contrib.gis.geos import Point
 from django.core.management.base import BaseCommand
 
 from property_app.models import Location, Property, PropertyImage
+from property_app.embeddings import generate_embedding
 
 
 class Command(BaseCommand):
@@ -46,6 +47,10 @@ class Command(BaseCommand):
             )
             if loc_created:
                 created_locations += 1
+            
+            if location.embedding is None:
+                location.embedding = generate_embedding(location.country)
+                location.save(update_fields=["embedding"])
 
             prop, prop_created = Property.objects.get_or_create(
                 name=str(row["property_name"]).strip(),
