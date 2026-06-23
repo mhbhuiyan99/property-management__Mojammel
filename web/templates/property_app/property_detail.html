@@ -1,12 +1,12 @@
 {% extends "property_app/base.html" %}
 
-{% block title %}{{ property.name }} &mdash; StayFinder{% endblock %}
+{% block title %}{{ property.name }} &mdash; NestQuest{% endblock %}
 
 {% block content %}
 <div class="max-w-6xl mx-auto px-4 py-8">
 
     <a href="{% url 'property_app:property-search' %}?location={{ property.location.country|urlencode }}"
-       class="text-sm text-gray-500 hover:text-rose-600">&larr; Back to {{ property.location.country }}</a>
+       class="text-sm text-gray-500 hover:text-teal-600">&larr; Back to {{ property.location.country }}</a>
 
     <h1 class="text-3xl font-bold mt-3">{{ property.name }}</h1>
     <p class="text-gray-500 mb-6">{{ property.location.country }}</p>
@@ -42,7 +42,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
                 {% for amenity in amenities %}
                     <div class="flex items-center gap-2 text-gray-700 text-sm">
-                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>{{ amenity }}
+                        <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>{{ amenity }}
                     </div>
                 {% endfor %}
             </div>

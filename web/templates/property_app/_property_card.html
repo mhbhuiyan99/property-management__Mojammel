@@ -1,0 +1,18 @@
+{% with first_image=property.images.first %}
+<a href="{% url 'property_app:property-detail' property.pk %}"
+   class="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden block">
+    <div class="h-48 bg-gray-200 overflow-hidden">
+        {% if first_image %}
+            <img src="{% if first_image.image %}{{ first_image.image.url }}{% else %}{{ first_image.url }}{% endif %}"
+                 alt="{{ property.name }}" class="w-full h-full object-cover">
+        {% else %}
+            <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">No image</div>
+        {% endif %}
+    </div>
+    <div class="p-4">
+        <h3 class="font-semibold text-lg truncate">{{ property.name }}</h3>
+        <p class="text-gray-500 text-sm mb-2">{{ property.location.country }}</p>
+        <p class="text-gray-500 text-sm">{{ property.bedrooms }} bd &middot; {{ property.bathrooms }} ba</p>
+    </div>
+</a>
+{% endwith %}

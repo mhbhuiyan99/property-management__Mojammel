@@ -7,31 +7,39 @@ from pgvector.django import CosineDistance
 from .embeddings import generate_embedding
 from .models import Location, Property
 
-# Cosine distance cutoff for "good enough" semantic matches (0 = identical
-# meaning, 2 = opposite). Tune this if semantic search feels too loose/strict.
-SEMANTIC_DISTANCE_THRESHOLD = 0.6
-SEMANTIC_TOP_N = 5
-
 
 def home(request):
-    """Homepage with a search form (search box for a location/country name)."""
+    """Homepage with a search form and 6 featured properties."""
     locations = Location.objects.order_by("country")
-    return render(request, "property_app/home.html", {"locations": locations})
+    featured_properties = (
+        Property.objects.select_related("location")
+        .prefetch_related("images")
+        .order_by("-created_at")[:6]
+    )
+    return render(
+        request,
+        "property_app/home.html",
+        {"locations": locations, "featured_properties": featured_properties},
+    )
 
 
-def _semantic_location_ids(query):
+SEMANTIC_TOP_N = 5
+
+def _semantic_location_ids(query, top_n=SEMANTIC_TOP_N):
     """
-    Embeds the query and returns IDs of the nearest Locations by meaning,
-    restricted to ones under the distance threshold.
+    Embeds the query and returns IDs of the nearest Locations by meaning.
+    No distance cutoff - with short strings like location names, MiniLM
+    cosine distances for genuinely related terms can still be fairly high,
+    so thresholding tends to filter out real matches. We just take the
+    closest N, same as the autocomplete endpoint does.
     """
     query_embedding = generate_embedding(query)
     nearest = (
         Location.objects.exclude(embedding__isnull=True)
         .annotate(distance=CosineDistance("embedding", query_embedding))
-        .order_by("distance")[:SEMANTIC_TOP_N]
+        .order_by("distance")[:top_n]
     )
-    return [loc.id for loc in nearest if loc.distance < SEMANTIC_DISTANCE_THRESHOLD]
-
+    return [loc.id for loc in nearest]
 
 def property_search(request):
     """

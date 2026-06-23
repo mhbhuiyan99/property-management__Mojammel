@@ -1,6 +1,6 @@
 {% extends "property_app/base.html" %}
 
-{% block title %}{% if query %}Stays in {{ query }}{% else %}Browse all stays{% endif %} &mdash; StayFinder{% endblock %}
+{% block title %}{% if query %}Stays in {{ query }}{% else %}Browse all stays{% endif %} &mdash; NestQuest{% endblock %}
 
 {% block content %}
 <div class="max-w-6xl mx-auto px-4 py-8">
@@ -12,10 +12,10 @@
             name="location"
             value="{{ query }}"
             placeholder="Search by location, e.g. Bali Indonesia"
-            class="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500"
+            class="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
         >
         <button type="submit"
-                class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-6 py-2 rounded-lg transition">
+                class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-2 rounded-lg transition">
             Search
         </button>
     </form>
@@ -26,7 +26,7 @@
         </h1>
         <span class="text-gray-500 text-sm">{{ result_count }} result{{ result_count|pluralize }}</span>
         {% if used_semantic %}
-        <div class="mb-6 px-4 py-2 bg-rose-50 border border-rose-200 rounded-lg text-sm text-rose-700">
+        <div class="mb-6 px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg text-sm text-teal-700">
             No exact match for &ldquo;{{ query }}&rdquo; &mdash; showing results based on meaning (semantic search).
         </div>
     {% endif %}
@@ -35,24 +35,7 @@
     {% if page_obj %}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for property in page_obj %}
-                {% with first_image=property.images.first %}
-                <a href="{% url 'property_app:property-detail' property.pk %}"
-                   class="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden block">
-                    <div class="h-48 bg-gray-200 overflow-hidden">
-                        {% if first_image %}
-                            <img src="{% if first_image.image %}{{ first_image.image.url }}{% else %}{{ first_image.url }}{% endif %}"
-                                 alt="{{ property.name }}" class="w-full h-full object-cover">
-                        {% else %}
-                            <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">No image</div>
-                        {% endif %}
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-semibold text-lg truncate">{{ property.name }}</h3>
-                        <p class="text-gray-500 text-sm mb-2">{{ property.location.country }}</p>
-                        <p class="text-gray-500 text-sm">{{ property.bedrooms }} bd &middot; {{ property.bathrooms }} ba</p>
-                    </div>
-                </a>
-                {% endwith %}
+                {% include "property_app/_property_card.html" %}
             {% endfor %}
         </div>
 
@@ -60,21 +43,21 @@
         <div class="flex items-center justify-center gap-2 mt-10">
             {% if page_obj.has_previous %}
                 <a href="?location={{ query|urlencode }}&page={{ page_obj.previous_page_number }}"
-                   class="px-3 py-1.5 rounded border border-gray-300 text-sm hover:border-rose-500">&laquo; Prev</a>
+                   class="px-3 py-1.5 rounded border border-gray-300 text-sm hover:border-teal-500">&laquo; Prev</a>
             {% endif %}
 
             {% for num in page_obj.paginator.page_range %}
                 {% if num == page_obj.number %}
-                    <span class="px-3 py-1.5 rounded bg-rose-600 text-white text-sm">{{ num }}</span>
+                    <span class="px-3 py-1.5 rounded bg-teal-600 text-white text-sm">{{ num }}</span>
                 {% else %}
                     <a href="?location={{ query|urlencode }}&page={{ num }}"
-                       class="px-3 py-1.5 rounded border border-gray-300 text-sm hover:border-rose-500">{{ num }}</a>
+                       class="px-3 py-1.5 rounded border border-gray-300 text-sm hover:border-teal-500">{{ num }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
                 <a href="?location={{ query|urlencode }}&page={{ page_obj.next_page_number }}"
-                   class="px-3 py-1.5 rounded border border-gray-300 text-sm hover:border-rose-500">Next &raquo;</a>
+                   class="px-3 py-1.5 rounded border border-gray-300 text-sm hover:border-teal-500">Next &raquo;</a>
             {% endif %}
         </div>
         {% endif %}
