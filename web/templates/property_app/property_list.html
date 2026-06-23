@@ -25,6 +25,11 @@
             {% if query %}Stays in &ldquo;{{ query }}&rdquo;{% else %}All stays{% endif %}
         </h1>
         <span class="text-gray-500 text-sm">{{ result_count }} result{{ result_count|pluralize }}</span>
+        {% if used_semantic %}
+        <div class="mb-6 px-4 py-2 bg-rose-50 border border-rose-200 rounded-lg text-sm text-rose-700">
+            No exact match for &ldquo;{{ query }}&rdquo; &mdash; showing results based on meaning (semantic search).
+        </div>
+    {% endif %}
     </div>
 
     {% if page_obj %}

@@ -13,19 +13,19 @@
         </p>
 
         <form action="{% url 'property_app:property-search' %}" method="get"
-              class="bg-white rounded-xl shadow-lg p-3 flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
-            <input
-                type="text"
-                name="location"
-                placeholder="Where are you going? e.g. Destin, Florida, USA"
-                list="location-options"
-                class="flex-1 px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-gray-800"
-            >
-            <datalist id="location-options">
-                {% for loc in locations %}
-                    <option value="{{ loc.country }}"></option>
-                {% endfor %}
-            </datalist>
+              class="bg-white rounded-xl shadow-lg p-3 flex flex-col sm:flex-row gap-3 max-w-xl mx-auto relative">
+            <div class="flex-1 relative">
+                <input
+                    type="text"
+                    name="location"
+                    id="location-input"
+                    autocomplete="off"
+                    placeholder="Where are you going? e.g. Bali, beach getaway, mountains..."
+                    class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-gray-800"
+                >
+                <div id="location-suggestions"
+                     class="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg text-left hidden z-20 max-h-64 overflow-y-auto"></div>
+            </div>
             <button type="submit"
                     class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-6 py-3 rounded-lg transition">
                 Search
@@ -34,18 +34,57 @@
     </div>
 </section>
 
-<section class="max-w-6xl mx-auto px-4 py-12">
-    <h2 class="text-xl font-bold mb-4">Popular locations</h2>
-    <div class="flex flex-wrap gap-3">
-        {% for loc in locations %}
-            <a href="{% url 'property_app:property-search' %}?location={{ loc.country|urlencode }}"
-               class="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm text-gray-700 hover:border-rose-500 hover:text-rose-600 transition">
-                {{ loc.country }}
-            </a>
-        {% empty %}
-            <p class="text-gray-500">No locations yet &mdash; run the import_properties command.</p>
-        {% endfor %}
-    </div>
-</section>
-{% endblock %}
+<script>
+(function () {
+    const input = document.getElementById("location-input");
+    const box = document.getElementById("location-suggestions");
+    let debounceTimer = null;
 
+    function hideBox() {
+        box.classList.add("hidden");
+        box.innerHTML = "";
+    }
+
+    function renderResults(results) {
+        if (!results.length) {
+            hideBox();
+            return;
+        }
+        box.innerHTML = results.map(r =>
+            `<div class="px-4 py-2 hover:bg-rose-50 cursor-pointer text-gray-700 text-sm suggestion-item" data-country="${r.country}">
+                ${r.country} <span class="text-gray-400">(${r.code})</span>
+            </div>`
+        ).join("");
+        box.classList.remove("hidden");
+
+        box.querySelectorAll(".suggestion-item").forEach(el => {
+            el.addEventListener("click", () => {
+                input.value = el.dataset.country;
+                hideBox();
+            });
+        });
+    }
+
+    input.addEventListener("input", () => {
+        const q = input.value.trim();
+        clearTimeout(debounceTimer);
+        if (!q) {
+            hideBox();
+            return;
+        }
+        debounceTimer = setTimeout(() => {
+            fetch(`/api/locations/autocomplete/?q=${encodeURIComponent(q)}`)
+                .then(res => res.json())
+                .then(data => renderResults(data.results || []))
+                .catch(() => hideBox());
+        }, 250);
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!box.contains(e.target) && e.target !== input) {
+            hideBox();
+        }
+    });
+})();
+</script>
+{% endblock %}
