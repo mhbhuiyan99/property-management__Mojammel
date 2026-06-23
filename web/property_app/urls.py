@@ -8,5 +8,5 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("search/", views.property_search, name="property-search"),
     path("property/<int:pk>/", views.property_detail, name="property-detail"),
+    path("api/locations/autocomplete/", views.location_autocomplete, name="location-autocomplete"),
 ]
-
